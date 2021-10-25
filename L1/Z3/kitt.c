@@ -6,7 +6,7 @@ void turn_tx_and_rx_off() {
 }
 
 void set_portd_to_output_mode() {
-    DDRD  = 0xFF; // set all 8 bits
+    DDRD  = 0xFF;
 }
 
 int main() {

@@ -50,14 +50,9 @@ int main() {
         current_bit = increment_current_bit(current_bit);
         _delay_ms(10);
 
-        /* if(is_recording_in_progress){ */
-        /*     PORTD &= ~(_BV(LED)); */
-        /* } */
-
         if(is_recording_in_progress && ((++current_period)== BUFFER_SIZE)){
             is_recording_in_progress = 0;
 
-            /* int16_t last_bit_of_buffer = decrement_current_bit(starting_bit); */
             int16_t counter = 0;
 
             for(int16_t i = starting_bit; counter < BUFFER_SIZE-1; i = increment_current_bit(i)){
