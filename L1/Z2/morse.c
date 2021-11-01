@@ -80,11 +80,11 @@ int main()
     {
         scanf("%s", input);
 
-        for(int i=0; input[i] != 0; i++)
+        for(uint16_t i=0; input[i] != 0; i++)
         {
             int letter_index = input[i] - 'A';
 
-            for(int j = 0; alpha[letter_index][j] != 0; j++)
+            for(uint16_t j = 0; alpha[letter_index][j] != 0; j++)
             {
                 PORTD = _BV(PD2);
                 _delay_ms(alpha[letter_index][j] == '-' ? DASH_DELAY : DOT_DELAY);
@@ -92,6 +92,7 @@ int main()
                 PORTD = 0;
                 _delay_ms(ELEMENT_DELAY);
             }
+            input[0] = '\0';
         }
         PORTD = _BV(PD3);
         _delay_ms(CHAR_DELAY);

@@ -28,7 +28,7 @@ int main() {
 
     int16_t is_recording_in_progress = 0;
     int16_t current_bit = 0;
-    int16_t starting_bit;
+    int16_t starting_bit = 0;
     int16_t current_period = 0;
     int16_t circular_buffer[BUFFER_SIZE];
 
