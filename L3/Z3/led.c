@@ -11,8 +11,9 @@ static inline void turn_tx_and_rx_off() {
     UCSR0B &= ~_BV(RXEN0) & ~_BV(TXEN0);
 }
 
-#define delay(us) _delay_us(us)
-
+void delay(uint16_t us){
+    while(us--) _delay_us(1);
+}
 int main(){
     initADC0();
     turn_tx_and_rx_off();
@@ -26,84 +27,86 @@ int main(){
         adcValue = ADC;
 
         PORTD = _BV(PD2);
-        switch(adcValue / 100){
-            case 0:
-                delay(1 << 0);
-                break;
-            case 1:
-                delay(1 << 1);
-                break;
-            case 2:
-                delay(1 << 2);
-                break;
-            case 3:
-                delay(1 << 3);
-                break;
-            case 4:
-                delay(1 << 4);
-                break;
-            case 5:
-                delay(1 << 5);
-                break;
-            case 6:
-                delay(1 << 6);
-                break;
-            case 7:
-                delay(1 << 7);
-                break;
-            case 8:
-                delay(1 << 8);
-                break;
-            case 9:
-                delay(1 << 9);
-                break;
-            case 10:
-                delay(1 << 10);
-                break;
-            case 11:
-                delay(1 << 11);
-                break;
-            case 12:
-                delay(1 << 12);
-                break;
-            default:
-                delay(1 << 13);
-                break;
-        }
+        delay(1 << (adcValue/100));
+        /* switch(adcValue / 100){ */
+        /*     case 0: */
+        /*         delay(1 << 0); */
+        /*         break; */
+        /*     case 1: */
+        /*         delay(1 << 1); */
+        /*         break; */
+        /*     case 2: */
+        /*         delay(1 << 2); */
+        /*         break; */
+        /*     case 3: */
+        /*         delay(1 << 3); */
+        /*         break; */
+        /*     case 4: */
+        /*         delay(1 << 4); */
+        /*         break; */
+        /*     case 5: */
+        /*         delay(1 << 5); */
+        /*         break; */
+        /*     case 6: */
+        /*         delay(1 << 6); */
+        /*         break; */
+        /*     case 7: */
+        /*         delay(1 << 7); */
+        /*         break; */
+        /*     case 8: */
+        /*         delay(1 << 8); */
+        /*         break; */
+        /*     case 9: */
+        /*         delay(1 << 9); */
+        /*         break; */
+        /*     case 10: */
+        /*         delay(1 << 10); */
+        /*         break; */
+        /*     case 11: */
+        /*         delay(1 << 11); */
+        /*         break; */
+        /*     case 12: */
+        /*         delay(1 << 12); */
+        /*         break; */
+        /*     default: */
+        /*         delay(1 << 13); */
+        /*         break; */
+        /* } */
         PORTD = 0;
-        switch(adcValue/100){
-            case 0:
-                delay(1 << 10);
-                break;
-            case 1:
-                delay(1 << 9);
-                break;
-            case 2:
-                delay(1 << 8);
-                break;
-            case 3:
-                delay(1 << 7);
-                break;
-            case 4:
-                delay(1 << 6);
-                break;
-            case 5:
-                delay(1 << 5);
-                break;
-            case 6:
-                delay(1 << 4);
-                break;
-            case 7:
-                delay(1 << 3);
-                break;
-            case 8:
-                delay(1 << 2);
-                break;
-            case 9:
-                delay(1 << 1);
-                break;
-            default:
-                break;
-        }
+        delay(1 << (10 - adcValue/100));
+        /* switch(adcValue/100){ */
+        /*     case 0: */
+        /*         delay(1 << 10); */
+        /*         break; */
+        /*     case 1: */
+        /*         delay(1 << 9); */
+        /*         break; */
+        /*     case 2: */
+        /*         delay(1 << 8); */
+        /*         break; */
+        /*     case 3: */
+        /*         delay(1 << 7); */
+        /*         break; */
+        /*     case 4: */
+        /*         delay(1 << 6); */
+        /*         break; */
+        /*     case 5: */
+        /*         delay(1 << 5); */
+        /*         break; */
+        /*     case 6: */
+        /*         delay(1 << 4); */
+        /*         break; */
+        /*     case 7: */
+        /*         delay(1 << 3); */
+        /*         break; */
+        /*     case 8: */
+        /*         delay(1 << 2); */
+        /*         break; */
+        /*     case 9: */
+        /*         delay(1 << 1); */
+        /*         break; */
+        /*     default: */
+        /*         break; */
+        /* } */
     }
 }
