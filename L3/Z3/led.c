@@ -3,7 +3,7 @@
 
 static inline void initADC0(){
     ADMUX  |= _BV(REFS0);
-    ADCSRA |= _BV(ADPS1);
+    ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0);
     ADCSRA |= _BV(ADEN);
 }
 
