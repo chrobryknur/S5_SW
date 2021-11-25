@@ -8,7 +8,7 @@
 
 volatile int8_t  a8  = 10, b8  = 10;
 volatile int16_t a16 = 1023, b16 = 1025;
-volatile int32_t a32 = 1032132, b32 = 103232;
+volatile int32_t a32 = 1032132, b32 = 0;
 volatile int64_t a64 = 103213321, b64 = 10321321;
 volatile float   af  = 10.1, bf  = 10.2;
 

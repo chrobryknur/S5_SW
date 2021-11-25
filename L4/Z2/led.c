@@ -20,7 +20,7 @@ void timer1_init()
   // ICR1  = 999
   // częstotliwość 16e6/(8*(1+99)) = 2kHz
   // wzór: datasheet 20.12.3 str. 164
-  ICR1 = 999;
+  ICR1 = 99;
   TCCR1A = _BV(COM1A1) | _BV(WGM11);
   TCCR1B = _BV(WGM12) | _BV(WGM13) | _BV(CS11);
   // ustaw pin OC1A (PB1) jako wyjście
