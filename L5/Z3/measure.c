@@ -7,7 +7,7 @@
 #define BAUD 9600
 #define UBRR_VALUE ((F_CPU)/16/(BAUD)-1)
 
-#define NUMBER_OF_MEASUREMENTS 20
+#define NUMBER_OF_MEASUREMENTS 100
 
 void uart_init()
 {
@@ -36,18 +36,18 @@ static inline void initADC0(){
     ADMUX  |= _BV(REFS0); // V_CC
     ADMUX  |= _BV(MUX3) | _BV(MUX2) | _BV(MUX1); // select V_BG (1.1V) as the input channel
     ADCSRA |= _BV(ADEN);
-    ADCSRA |= _BV(ADPS2) /*| _BV(ADPS1) | _BV(ADPS0)*/; // set prescaler to 128
+    ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); // set prescaler to 128
 }
 
-float calculate_variance(uint16_t* arr){
-    float avg = 0;
+float calculate_variance(volatile uint16_t* arr){
+    float avg = 0.0;
     for(uint8_t i = 0; i < NUMBER_OF_MEASUREMENTS; i++){
         avg += arr[i];
     }
 
     avg /= NUMBER_OF_MEASUREMENTS;
 
-    float variance = 0;
+    float variance = 0.0;
 
     for(uint8_t i = 0; i< NUMBER_OF_MEASUREMENTS; i++){
         variance += (arr[i] - avg) * (arr[i] - avg);
@@ -57,17 +57,14 @@ float calculate_variance(uint16_t* arr){
     return variance;
 }
 
-uint16_t normal[NUMBER_OF_MEASUREMENTS];
-uint8_t normal_iter = 0;
+volatile uint16_t normal[NUMBER_OF_MEASUREMENTS];
+volatile uint8_t normal_iter = 0;
 
-uint16_t noise_reduction[NUMBER_OF_MEASUREMENTS];
-uint8_t noise_reduction_iter = 0;
+volatile uint16_t noise_reduction[NUMBER_OF_MEASUREMENTS];
+volatile uint8_t noise_reduction_iter = 0;
 
 ISR(ADC_vect){
-    uint16_t temp = ADC;
-    noise_reduction[noise_reduction_iter++] = temp;
-    printf("R: %"PRIu16" ", temp);
-    _delay_ms(10);
+    noise_reduction[noise_reduction_iter++] = ADC;
 }
 
 int main() {
@@ -80,35 +77,24 @@ int main() {
     SMCR = _BV(SM0); // ADC Noise Reduction sleep mode
     sei();
     while (1) {
-        /* sleep_mode(); */
         if(normal_iter < NUMBER_OF_MEASUREMENTS){
             ADCSRA |= _BV(ADSC);
             loop_until_bit_is_clear(ADCSRA, ADSC);
             uint16_t temp = ADC;
             normal[normal_iter++] = temp;
-            if(normal_iter == NUMBER_OF_MEASUREMENTS){
-                putchar('\r');
-                putchar('\n');
-            }
-            printf("%"PRIu16" ", temp);
         }
         else if(noise_reduction_iter < NUMBER_OF_MEASUREMENTS){
             ADCSRA |= _BV(ADIE);  // enable ADC Interrupt
             ADCSRA |= _BV(ADSC);
             sleep_mode();
-            ADCSRA &= ~_BV(ADSC);
-            if(noise_reduction_iter == NUMBER_OF_MEASUREMENTS){
-                putchar('\r');
-                putchar('\n');
-            }
         }
         else{
             normal_iter = 0;
             noise_reduction_iter = 0;
             ADCSRA &= ~_BV(ADIE);
-
-            _delay_ms(1000);
+            cli();
+            printf("%f %f\r\n", calculate_variance(normal), calculate_variance(noise_reduction));
+            sei();
         }
-
     }
 }

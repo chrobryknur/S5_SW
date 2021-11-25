@@ -10,11 +10,8 @@
 static inline void initADC0(){
     ADMUX  |= _BV(REFS0); // V_CC
     ADCSRA |= _BV(ADEN);
-    ADCSRA |= _BV(ADATE); // enable ADC Auto Trigger
-    ADCSRB |= _BV(ADTS1); // ADC Auto Trigger source = INT0
     ADCSRA |= _BV(ADIE);  // enable ADC Interrupt
     ADCSRA |= _BV(ADPS2) | _BV(ADPS1) | _BV(ADPS0); // set prescaler to 128
-
 }
 
 void uart_init()
@@ -40,6 +37,7 @@ int uart_receive(FILE *stream)
 
 FILE uart_file;
 
+volatile uint8_t number_of_interrupts = 0;
 volatile float resistance = 0.0;
 
 void io_init()
@@ -57,10 +55,12 @@ void timer2_init(){
     TIMSK2 = _BV(TOIE2);                         // enable overflow flag
 }
 
+const float V_in  = 5.0;
+const float R2    = 10000.0;
+volatile float V_out;
+
 ISR(ADC_vect){
-    float V_in  = 5.0;
-    float V_out = (ADC * V_in) / 1024.0;
-    float R2    = 10000.0;
+    V_out = (ADC * V_in) / 1024.0;
 
     resistance = (R2 * (V_in - V_out)) / V_out;
     ADCSRA &= ~_BV(ADEN); // turn ADC off
@@ -71,6 +71,7 @@ ISR(INT0_vect){
 }
 
 ISR(TIMER2_OVF_vect){
+    number_of_interrupts++;
 }
 
 int main() {
@@ -85,6 +86,9 @@ int main() {
     sei();
     while (1) {
         sleep_mode();
-        printf("Resistance: %f\r\n", resistance);
+        if(number_of_interrupts > 10){
+            printf("Resistance: %f\r\n", resistance);
+            number_of_interrupts = 0;
+        }
     }
 }
