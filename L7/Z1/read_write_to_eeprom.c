@@ -21,8 +21,7 @@ int uart_transmit(char data, FILE *stream){
   return 0;
 }
 
-int uart_receive(FILE *stream)
-{
+int uart_receive(FILE *stream){
   while (!(UCSR0A & _BV(RXC0)));
   return UDR0;
 }
@@ -105,7 +104,7 @@ int main(){
             }
         }
         else{
-            continue;
+            printf("[ERR]: unknown command\r\n");
         }
     }
 }

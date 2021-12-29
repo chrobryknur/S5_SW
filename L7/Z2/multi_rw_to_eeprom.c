@@ -234,7 +234,7 @@ int main(){
             }
         }
         else{
-            continue;
+            printf("[ERR]: unknown command\r\n");
         }
     }
 }
