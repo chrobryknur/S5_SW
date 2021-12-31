@@ -76,7 +76,7 @@ void vApplicationIdleHook(void)
 
 static void vRecord(void* pvParameters)
 {
-    const TickType_t delayTime = pdMS_TO_TICKS(10);
+    const TickType_t delayTime = 10 / portTICK_PERIOD_MS;
 
     uint8_t circular_buffer[BUFFER_BYTES];
     DDRB |= _BV(LED);
@@ -110,7 +110,7 @@ static void vKitt(void* pvParameters)
     UCSR0B &= ~_BV(RXEN0) & ~_BV(TXEN0);
     DDRD  = 0xFF;
 
-    const TickType_t delayTime = pdMS_TO_TICKS(100);
+    const TickType_t delayTime = 100 / portTICK_PERIOD_MS;
 
     for ( ;; )
     {
