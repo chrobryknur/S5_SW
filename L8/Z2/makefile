@@ -45,7 +45,7 @@ PORT_DIR = $(REPO_ROOT_DIR)/FreeRTOS/Source/portable/GCC/ATMega328
 ARDUINO_LIB = /usr/share/arduino/lib
 
 SRC	= \
-main.c \
+blink.c \
 $(SOURCE_DIR)/tasks.c \
 $(SOURCE_DIR)/queue.c \
 $(SOURCE_DIR)/list.c \
